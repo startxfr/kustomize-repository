@@ -1,0 +1,6 @@
+# Name of this kustomize
+name: cluster-config
+# Description of this Helm chart
+description: Kustomize used to configure cluster generic behaviours like image prunning and cluster auto-scaling capacity 
+# Version of this kustomize (see https://github.com/startxfr/kustomize-repository/blob/dev/README.md for kustomize release guidelines)
+version: 0.2.0
