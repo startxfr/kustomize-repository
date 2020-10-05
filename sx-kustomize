@@ -1,0 +1,28 @@
+#!/bin/bash
+PROJECT_PATH=`dirname $(readlink -f $0)`
+PROJECT_KUSTOMIZEPATH=$PROJECT_PATH/kustomizes
+PROJECT_LIBPATH=$PROJECT_PATH/_tools
+
+source $PROJECT_LIBPATH/cli
+
+## Start prog switch
+
+if [[ "$1" != "" ]]; then
+    case $1 in
+        list)                   routerList;;
+        publish)                routerPublish;;
+        *)
+            case $2 in
+                info)           routerKustomizeInfo $1;;
+                create)         routerKustomizeCreate $1 $3;;
+                test)           routerKustomizeTest $1;;
+                release)        routerKustomizeRelease $1 $3;;
+                delete)         routerKustomizeDelete $1 ;;
+                publish)        routerKustomizePublish $@ ;;
+                *)              menuUsageKustomize $@ ;;
+            esac
+        ;;
+    esac
+else
+    menuUsage
+fi
