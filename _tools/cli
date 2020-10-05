@@ -1,0 +1,290 @@
+#!/bin/bash
+
+SXV4_CONSOLE_VERSION=3.9.109
+SHARED_NAME=_sample_
+SHARED_SAMPLE=_tools/$SHARED_NAME
+BRANCH_NAME=devel
+GITHUB_USER=startxfr
+GITHUB_REPOSITORY=kustomize-repository
+
+
+#####################
+## GENERICS FUNCTIONS
+
+# read kustomize version
+function kustomizeReadVersion {
+    if [[ "" != "$1" ]]; then
+        echo $(cat $PROJECT_KUSTOMIZEPATH/$1/package.yaml | yq -r .version)
+    else
+        echo ""
+    fi
+}
+
+# read kustomize description
+function kustomizeReadDescription {
+    if [[ "" != "$1" ]]; then
+        echo $(cat $PROJECT_KUSTOMIZEPATH/$1/package.yaml | yq -r .description)
+    else
+        echo ""
+    fi
+}
+
+# read kustomize name
+function kustomizeReadName {
+    if [[ "" != "$1" ]]; then
+        echo $(cat $PROJECT_KUSTOMIZEPATH/$1/package.yaml | yq -r .name)
+    else
+        echo ""
+    fi
+}
+
+
+
+##########################
+## ROUTER GLOBALS COMMANDS
+
+# router for delete sub-command
+function routerList {
+    echo -e "\e[31mList\e[0m kustomize in $PROJECT_KUSTOMIZEPATH"
+    cd $PROJECT_KUSTOMIZEPATH
+    local LIST=$(ls -d -I "_*" -I "docs" *)
+    cd - &>/dev/null
+    for kustomize in $LIST; do
+        echo -e " - $kustomize"
+    done
+}
+
+# router for publish command
+function routerPublish {
+    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
+    local branch_current="master"
+    local branch_target="master"
+    if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
+        branch_current="$BRANCH_NAME"
+    fi
+    echo -e "\e[36mPublish\e[0m commit all change to $GITHUB_REPOSITORY respository"
+    git add $PROJECT_PATH &>/dev/null
+    git commit -m "[docs] update repository content" $PROJECT_PATH &>/dev/null
+    git push origin $branch_current
+    if [[ "$branch_current" != "$branch_target" ]]; then
+        echo -e "\e[36mPublish\e[0m merge \e[1m$branch_current\e[0m into \e[1m$branch_target\e[0m"
+        git checkout $branch_target &>/dev/null
+        git merge --commit $branch_current
+        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m and \e[1m$branch_target\e[0m"
+        git push origin $branch_target $branch_current
+        git checkout $branch_current
+    else 
+        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m"
+        git push origin $branch_target
+    fi
+}
+
+
+
+#################################
+## ROUTER KUSTOMIZE SUB-COMMANDS
+
+# router for kustomize info sub-command
+function routerKustomizeInfo {
+    local kustomize_name=$1
+    if [[ "" != "$kustomize_name" ]]; then
+        local current_name=$(kustomizeReadName $kustomize_name)
+        local current_release=$(kustomizeReadVersion $kustomize_name)
+        local current_desc=$(kustomizeReadDescription $kustomize_name)
+        echo -e "\e[32mInfo\e[0m about \e[1m$kustomize_name\e[0m kustomize"
+        echo -e "- \e[1mPackage\e[0m     : $kustomize_name-$current_release"
+        echo -e "- \e[1mVersion\e[0m     : $current_release"
+        echo -e "- \e[1mName\e[0m        : $current_name"
+        echo -e "- \e[1mDescription\e[0m : $current_desc"
+    fi
+}
+
+# router for kustomize reate sub-command
+function routerKustomizeCreate {
+    local kustomize_name=$1
+    local kustomize_template=$2
+    local template_name=_sample_
+    local template_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_template
+    local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
+    if [[ -r $kustomize_dir ]]; then
+        echo -e "\e[32mCreate\e[0m \e[1m\e[31mERROR\e[0m \e[1m$kustomize_name\e[0m kustomize \e[1malready exist\e[0m in $PROJECT_KUSTOMIZEPATH"
+        exit
+    fi
+    if [[ "" != "$kustomize_template" && -r $template_dir ]]; then
+        template_name=$kustomize_template
+    else
+        template_dir=$PROJECT_PATH/$SHARED_SAMPLE
+    fi
+    echo -e "\e[32mCreate\e[0m \e[1m$kustomize_name\e[0m kustomize from \e[1m$template_name\e[0m"
+    cp -R $template_dir $kustomize_dir &>/dev/null
+    sed -i "s/$template_name/$kustomize_name/g" $(find $kustomize_dir -type f)
+    git add $kustomize_dir &>/dev/null
+    git commit -m "[kustomize/$kustomize_name] Create from $template_name" $kustomize_dir &>/dev/null
+}
+
+# router for kustomize test sub-command
+function routerKustomizeTest {
+    local kustomize_name=$1
+    local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
+    local test_dir=$kustomize_dir/templates/tests
+    if [[ -r $kustomize_dir ]]; then
+        echo -e "\e[33mTest\e[0m \e[1m$kustomize_name\e[0m kustomize"
+        if [[ ! -r $test_dir ]]; then
+            echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1m$kustomize_name\e[0m kustomize \e[1mdoesn't have a test\e[0m script in $test_dir"
+            exit
+        fi
+        echo -e "\e[33mTest\e[0m \e[1mGenerate template\e[0m for kustomize \e[1m$kustomize_name\e[0m"
+        oc apply -k $kustomize_dir --dry-run
+    else
+        echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
+        routerList
+    fi
+}
+
+# router for kustomize release sub-command
+function routerKustomizeRelease {
+    local kustomize_name=$1
+    local auto_feature=$2
+    local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
+    if [[ -r $kustomize_dir ]]; then
+        echo -e "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m kustomize"
+        local current_release=$(kustomizeReadVersion $kustomize_name)
+        local next_release=$(cat $kustomize_dir/package.yaml | yq -r .version  | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
+        if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
+            echo -e "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m auto-version $next_release"
+        else
+            echo -en "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m Set $kustomize_name next version [$next_release] : "
+            read nextRel
+            if [[ "$nextRel" != "" ]]; then
+                next_release=$nextRel
+            fi
+        fi
+        echo -e "\e[35mRelease\e[0m Update \e[1m$kustomize_name\e[0m release number $next_release in $kustomize_name/package.yaml"
+        sed -i "s/$current_release/$next_release/" $kustomize_dir/package.yaml
+        git add $kustomize_dir
+        git commit -ma "[kustomize/$kustomize_name] Upgrade release number, from $current_release to $next_release in package.yaml" $kustomize_dir &>/dev/null
+    else
+        echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
+        routerList
+    fi
+}
+
+# router for kustomize publish sub-command
+function routerKustomizePublish {
+    local kustomize_name=$1
+    local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
+    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
+    local current_release=$(kustomizeReadVersion $kustomize_name)
+    if [[ -r $kustomize_dir ]]; then
+        echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
+        git add $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[docs] store kustomize $kustomize_name v$current_release package in docs" $PROJECT_PATH/docs/packages &>/dev/null
+        git push origin $BRANCH_NAME
+    else
+        echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
+        routerList
+    fi
+}
+
+# router for kustomize delete sub-command
+function routerKustomizeDelete {
+    local kustomize_name=$1
+    local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
+    local remove_repository=$2
+    local publish_repository=yes
+    if [[ "" != "$kustomize_name" && -w $kustomize_dir ]]; then
+        echo -e "\e[31mDelete\e[0m \e[1m$kustomize_name\e[0m kustomize"
+        if [[ "--with-repository" == "$remove_repository" || "-r" == "$remove_repository" ]]; then
+            echo -e "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m with repository delete"
+            remove_repository=yes
+        else
+            echo -en "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m With repository delete [y/N] : "
+            read delRep
+            if [[ "$delRep" == "y"  || "$delRep" == "Y" ]]; then
+                remove_repository=yes
+            fi
+        fi
+
+        if [[ "$remove_repository" == "yes" ]]; then
+            echo -en "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m Publish change to repository  [Y/n] : "
+            read delRep
+            if [[ "$delRep" == "n"  || "$delRep" == "N" ]]; then
+                publish_repository=no
+            fi
+        fi
+        rm -rf $kustomize_dir &>/dev/null
+        git add $kustomize_dir &>/dev/null
+        git commit -m "[kustomize/$kustomize_name] deleted kustomize $kustomize_name" $kustomize_dir &>/dev/null
+        if [[ "$remove_repository" == "yes" ]]; then
+            rm -rf $PROJECT_PATH/docs/packages/$kustomize_name-*.tgz &>/dev/null
+            git add $PROJECT_PATH/docs/packages/$kustomize_name-*.tgz &>/dev/null
+            git commit -m "[kustomize/$kustomize_name] deleted kustomize $kustomize_name packages into repository" $PROJECT_PATH &>/dev/null
+            if [[ "$publish_repository" == "yes" ]]; then
+                routerPublish
+            fi
+        fi
+    else
+        echo -e "\e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
+        routerList
+    fi
+}
+
+# menu switch for usage command
+function menuUsage {
+    menuHeadArt
+cat <<EOF
+
+This client helps you develop, test, package and publish a bunch of kustomizes 
+hosted into the same kustomize repository.
+
+Usage:
+  ./sx-kustomize <action> [flags]
+
+- Actions  :
+  - list                           list all kustomize managed
+  - publish                        Publish all change into repository
+  - version                        Get version of this tools
+  - <kustomize-name>                   Use kustomize-named sub-command (see ./sx-kustomize-name help)
+
+- Examples  :
+  ./sx-kustomize list                   list all kustomize managed
+  ./sx-kustomize publish                Publish all change into repository
+  ./sx-kustomize version                Get version of this tools
+  ./sx-kustomize <kustomize-name> info      Get info on a managed kustomize (see ./sx-kustomize-name help for more commands)
+
+EOF
+}
+
+# menu switch for usage of kustomize sub-command
+function menuUsageKustomize {
+    menuHeadArt
+cat <<EOF
+
+This client helps you develop, test, package and publish an kustomize.
+
+Usage:
+  ./sx-kustomize <kustomize-name> <action> [flags]
+
+- Actions  :
+  - create                         Create an new kustomize
+  - info                           Get information about a given kustomize
+  - test                           Test an kustomize
+  - release                        Release an kustomize
+  - publish                        Publish an kustomize into repository
+  - delete                         Delete an kustomize
+
+- Examples  :
+  ./sx-kustomize my-example create      Create an new kustomize named my-example
+  ./sx-kustomize my-example info        Read info about kustomize named my-example
+  ./sx-kustomize my-example test        Test my-example kustomize
+  ./sx-kustomize my-example release     Release my-example kustomize
+  ./sx-kustomize my-example publish     Publish an kustomize into repository
+  ./sx-kustomize my-example delete      Delete my-example kustomize
+
+EOF
+}
+
+# menu display AsciiArt
+function menuHeadArt {
+cat $PROJECT_LIBPATH/header.txt
+}
