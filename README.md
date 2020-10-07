@@ -1,11 +1,7 @@
 # kustomize-repository
 
-Repository of kustomize ressources to deploy infrastructure components
-
-# kustomize-repository
-
 Repository of kustomize ressources for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
-For more informations and access to the kustomize index, you can visit the [repository homepage](https://startxfr.github.io/kustomize-repository/).
+For more informations and access to the kustomize index, you can visit the [repository homepage](https://startxfr.github.io/kustomize-repository).
 
 ## Install component from repository
 
@@ -50,8 +46,7 @@ ls kustomizes
 ### 3. Install a kustomize
 
 ```bash
-cd kustomizes
-oc apply -k cluster-config/dev
+oc apply -k kustomizes/cluster-config/dev
 ```
 
 ## Install building environment
@@ -77,19 +72,13 @@ cd kustomize-repository
 ./sx-kustomize mykustomize test
 ```
 
-### 4. Package a kustomize
-
-```bash
-./sx-kustomize mykustomize package
-```
-
-### 5. Release a kustomize
+### 4. Release a kustomize
 
 ```bash
 ./sx-kustomize mykustomize package auto
 ```
 
-### 6. Delete a kustomize
+### 5. Delete a kustomize
 
 ```bash
 ./sx-kustomize mykustomize delete
