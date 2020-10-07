@@ -79,6 +79,16 @@ function routerPublish {
     fi
 }
 
+# router for version sub-command
+function routerVersion {
+    echo "sx console version : sx-helm $SXV4_CONSOLE_VERSION"
+    echo -n "Openshift : "
+    oc version 
+    echo -n "Kustomize : "
+    kustomize version --short
+}
+
+
 
 
 #################################
