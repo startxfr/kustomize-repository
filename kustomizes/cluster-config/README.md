@@ -1,25 +1,20 @@
-# Helm-chart STARTX : cluster-config
+# STARTX kustomize : cluster-config
 
-This helm chart used to configure cluster generic behaviours like image prunning and cluster auto-scaling capacity 
+This kustomize is used to configure cluster generic behaviours like image prunning and cluster auto-scaling capacity
 
-## Install the repository
-
-```bash
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
-```
-
-## Get information about this chart
+## Deploy this kustomize on openshift
 
 ```bash
-helm show chart startx/cluster-config
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/cluster-config
 ```
 
-## Install this chart
-
-This chart is use as a package envelop for configuration of cluster ressources already existing
-It can't be use as a common helm-chart (using ```helm install```) but should be used the
-following way :
+## use kustomize to build content
 
 ```bash
-helm template cluster-config startx/cluster-config | oc apply -f -
+kustomize build github.com/startxfr/kustomize-repository/kustomizes/cluster-config
 ```
+
+## More informations
+
+Read the [startx kustomize-repository homepage](https://startxfr.github.io/kustomize-repository) for
+more information on how to use theses resources.
