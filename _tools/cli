@@ -136,7 +136,7 @@ function routerKustomizeCreate {
 function routerKustomizeTest {
     local kustomize_name=$1
     local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
-    local test_dir=$kustomize_dir/templates/tests
+    local test_dir=$kustomize_dir/tests
     if [[ -r $kustomize_dir ]]; then
         echo -e "\e[33mTest\e[0m \e[1m$kustomize_name\e[0m kustomize"
         if [[ ! -r $test_dir ]]; then
@@ -144,7 +144,8 @@ function routerKustomizeTest {
             exit
         fi
         echo -e "\e[33mTest\e[0m \e[1mGenerate template\e[0m for kustomize \e[1m$kustomize_name\e[0m"
-        oc apply -k $kustomize_dir --dry-run
+        oc apply -k $test_dir --dry-run
+        kustomize build $test_dir
     else
         echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
         routerList
@@ -179,59 +180,28 @@ function routerKustomizeRelease {
     fi
 }
 
-# router for kustomize publish sub-command
-function routerKustomizePublish {
-    local kustomize_name=$1
-    local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
-    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-    local current_release=$(kustomizeReadVersion $kustomize_name)
-    if [[ -r $kustomize_dir ]]; then
-        echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
-        git add $PROJECT_PATH/docs/packages &>/dev/null
-        git commit -m "[docs] store kustomize $kustomize_name v$current_release package in docs" $PROJECT_PATH/docs/packages &>/dev/null
-        git push origin $BRANCH_NAME
-    else
-        echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
-        routerList
-    fi
-}
-
 # router for kustomize delete sub-command
 function routerKustomizeDelete {
     local kustomize_name=$1
     local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
-    local remove_repository=$2
-    local publish_repository=yes
+    local publish_repository=no
     if [[ "" != "$kustomize_name" && -w $kustomize_dir ]]; then
         echo -e "\e[31mDelete\e[0m \e[1m$kustomize_name\e[0m kustomize"
-        if [[ "--with-repository" == "$remove_repository" || "-r" == "$remove_repository" ]]; then
-            echo -e "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m with repository delete"
-            remove_repository=yes
+        if [[ "--publish" == "$2" || "-p" == "$2" ]]; then
+            echo -e "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m with publication"
+            publish_repository=yes
         else
-            echo -en "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m With repository delete [y/N] : "
+            echo -en "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m Publish change to repository  [y/N] : "
             read delRep
-            if [[ "$delRep" == "y"  || "$delRep" == "Y" ]]; then
-                remove_repository=yes
-            fi
-        fi
-
-        if [[ "$remove_repository" == "yes" ]]; then
-            echo -en "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m Publish change to repository  [Y/n] : "
-            read delRep
-            if [[ "$delRep" == "n"  || "$delRep" == "N" ]]; then
-                publish_repository=no
+            if [[ "$delRep" == "Y"  || "$delRep" == "y" ]]; then
+                publish_repository=yes
             fi
         fi
         rm -rf $kustomize_dir &>/dev/null
         git add $kustomize_dir &>/dev/null
         git commit -m "[kustomize/$kustomize_name] deleted kustomize $kustomize_name" $kustomize_dir &>/dev/null
-        if [[ "$remove_repository" == "yes" ]]; then
-            rm -rf $PROJECT_PATH/docs/packages/$kustomize_name-*.tgz &>/dev/null
-            git add $PROJECT_PATH/docs/packages/$kustomize_name-*.tgz &>/dev/null
-            git commit -m "[kustomize/$kustomize_name] deleted kustomize $kustomize_name packages into repository" $PROJECT_PATH &>/dev/null
-            if [[ "$publish_repository" == "yes" ]]; then
-                routerPublish
-            fi
+        if [[ "$publish_repository" == "yes" ]]; then
+            routerPublish
         fi
     else
         echo -e "\e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
@@ -251,16 +221,16 @@ Usage:
   ./sx-kustomize <action> [flags]
 
 - Actions  :
-  - list                           list all kustomize managed
-  - publish                        Publish all change into repository
-  - version                        Get version of this tools
+  - list                               list all kustomize managed
+  - publish                            Publish all change into repository
+  - version                            Get version of this tools
   - <kustomize-name>                   Use kustomize-named sub-command (see ./sx-kustomize-name help)
 
 - Examples  :
   ./sx-kustomize list                   list all kustomize managed
   ./sx-kustomize publish                Publish all change into repository
   ./sx-kustomize version                Get version of this tools
-  ./sx-kustomize <kustomize-name> info      Get info on a managed kustomize (see ./sx-kustomize-name help for more commands)
+  ./sx-kustomize <kustomize-name> info  Get info on a managed kustomize (see ./sx-kustomize-name help for more commands)
 
 EOF
 }
@@ -280,7 +250,6 @@ Usage:
   - info                           Get information about a given kustomize
   - test                           Test an kustomize
   - release                        Release an kustomize
-  - publish                        Publish an kustomize into repository
   - delete                         Delete an kustomize
 
 - Examples  :
@@ -288,7 +257,7 @@ Usage:
   ./sx-kustomize my-example info        Read info about kustomize named my-example
   ./sx-kustomize my-example test        Test my-example kustomize
   ./sx-kustomize my-example release     Release my-example kustomize
-  ./sx-kustomize my-example publish     Publish an kustomize into repository
+  ./sx-kustomize my-example release -p  Release my-example kustomize and publish it
   ./sx-kustomize my-example delete      Delete my-example kustomize
 
 EOF
