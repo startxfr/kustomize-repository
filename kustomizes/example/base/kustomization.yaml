@@ -37,26 +37,3 @@ configMapGenerator:
       configmap_label: base
     annotations:
       configmap_annotation: base
-
-# Example of incremental change for the image
-images:
-- name: nginx
-  newName: quay.io/app-sre/nginx
-  newTag: 1.9.0
-- name: quay.io/app-sre/nginx
-  newName: nginx
-  newTag: 1.9.1
-
-# Example of incremental change for the deployment
-patchesStrategicMerge:
-- patches/add-env.yaml
-- patches/scale-up.yaml
-
-
-# Example of incremental change with a patch
-patchesJson6902:
-- target:
-    version: v1
-    kind: Service
-    name: example
-  path: patches/add-label.yaml

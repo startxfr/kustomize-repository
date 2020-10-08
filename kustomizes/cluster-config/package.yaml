@@ -5,4 +5,4 @@ name: cluster-config
 # Description of this Kustomize package
 description: Kustomize used to configure cluster generic behaviours like image prunning and cluster auto-scaling capacity 
 # Version of this kustomize package (see https://github.com/startxfr/kustomize-repository/blob/dev/README.md for kustomize release guidelines)
-version: 0.2.0
+version: 0.2.1

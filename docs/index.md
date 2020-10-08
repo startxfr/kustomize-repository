@@ -7,11 +7,18 @@ For more informations and access to the kustomize index, you can visit the [repo
 
 List of kustomize packages availables in this repository, and sample to deploy it under your current openshift cluster (must be logged with appropriate rights).
 
-- [cluster-config](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/cluster-config) : ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/cluster-config```
-- [cluster-rbac](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/cluster-rbac) : ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/cluster-rbac```
-- [demo-pod](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-pod) : ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-pod```
-- [demo-deployment](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-deployment) : ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment```
-- [demo-sxapi](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-sxapi) : ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi```
+- [cluster-config](packages/cluster-config.md)
+  ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/cluster-config```
+- [cluster-rbac](packages/cluster-rbac.md)
+  ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/cluster-rbac```
+- [demo-pod](packages/demo-pod.md)
+  ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-pod```
+- [demo-deployment](packages/demo-deployment.md)
+  ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment```
+- [demo-sxapi](packages/demo-sxapi.md)
+  ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi```
+- [example](packages/example.md)
+  ```oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example```
 
 ## Install this repository
 

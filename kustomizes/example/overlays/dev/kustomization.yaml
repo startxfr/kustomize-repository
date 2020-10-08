@@ -12,4 +12,8 @@ images:
 - name: quay.io/app-sre/nginx
   newName: nginx
   newTag: 1.9.2
+
+# Example of incremental change for the deployment
+patchesStrategicMerge:
+- patches/scale-down.yaml
   
