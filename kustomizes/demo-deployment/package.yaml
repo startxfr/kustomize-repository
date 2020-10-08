@@ -1,6 +1,0 @@
-# Name of this kustomize package
-name: demo-deployment
-# Description of this Kustomize package
-description: Description of the demo-deployment startx kustomize package
-# Version of this kustomize package (see https://startxfr.github.io/kustomize-repository/releases for guidelines)
-version: 0.0.1
