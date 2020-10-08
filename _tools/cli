@@ -157,6 +157,8 @@ function routerKustomizeRelease {
     local kustomize_name=$1
     local auto_feature=$2
     local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
+    local next_description="Improve $kustomize_name options"
+    local next_date="$(date +%Y-%m-%d)"
     if [[ -r $kustomize_dir ]]; then
         echo -e "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m kustomize"
         local current_release=$(kustomizeReadVersion $kustomize_name)
@@ -169,11 +171,17 @@ function routerKustomizeRelease {
             if [[ "$nextRel" != "" ]]; then
                 next_release=$nextRel
             fi
+            echo -en "\e[35mRelease\e[0m \e[1m$kustomize_name\e[0m Set $kustomize_name release description [$next_description] : "
+            read nextDesc
+            if [[ "$nextDesc" != "" ]]; then
+                next_description="$nextDesc"
+            fi
         fi
         echo -e "\e[35mRelease\e[0m Update \e[1m$kustomize_name\e[0m release number $next_release in $kustomize_name/package.yaml"
+        echo "| $next_release   | $next_date | $next_description" >> $kustomize_dir/README.md
         sed -i "s/$current_release/$next_release/" $kustomize_dir/package.yaml
         git add $kustomize_dir
-        git commit -m "[kustomize/$kustomize_name] Upgrade release number, from $current_release to $next_release in package.yaml" $kustomize_dir &>/dev/null
+        git commit -m "[kustomize/$kustomize_name] release from $current_release to $next_release : $next_description" $kustomize_dir &>/dev/null
     else
         echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
         routerList

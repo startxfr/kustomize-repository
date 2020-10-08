@@ -18,3 +18,9 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/_sample_
 ```bash
 kustomize build github.com/startxfr/kustomize-repository/kustomizes/_sample_
 ```
+
+## History
+
+| Release | Date       | Description
+| ------- | ---------- | -----------------------
+| 0.0.1   | 20-10-04   | Initial commit
