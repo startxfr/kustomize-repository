@@ -1,3 +1,5 @@
+apiVersion: kustomize.package.startx.io/v1beta1
+kind: KustomizePackage
 # Name of this kustomize package
 name: cluster-config
 # Description of this Kustomize package
