@@ -1,0 +1,62 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Default resources for this package
+resources:
+- deployment.yaml
+- service.yaml
+
+# Example of vars
+vars:
+- name: MY_SERVICE_NAME
+  objref:
+    kind: Service
+    name: _sample_
+    apiVersion: v1
+  fieldref:
+    fieldpath: metadata.name
+
+
+# Common to all configmaps and secrets.
+generatorOptions:
+  labels:
+    common_label: base
+  annotations:
+    common_annotation: base
+
+
+# Example of a configMap generator
+configMapGenerator:
+- name: _sample_-config
+  literals:
+  - MY_CONFIG1="_sample_ value 1"
+  - MY_CONFIG2="_sample_ value 2"
+  options:
+    disableNameSuffixHash: true
+    labels:
+      configmap_label: base
+    annotations:
+      configmap_annotation: base
+
+# Example of incremental change for the image
+images:
+- name: nginx
+  newName: quay.io/app-sre/nginx
+  newTag: 1.9.0
+- name: quay.io/app-sre/nginx
+  newName: nginx
+  newTag: 1.9.2
+
+# Example of incremental change for the deployment
+patchesStrategicMerge:
+- patches/add-env.yaml
+- patches/scale-up.yaml
+
+
+# Example of incremental change with a patch
+patchesJson6902:
+- target:
+    version: v1
+    kind: Service
+    name: _sample_
+  path: patches/add-label.yaml
