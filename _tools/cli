@@ -114,6 +114,7 @@ function routerKustomizeCreate {
     local kustomize_name=$1
     local kustomize_template=$2
     local template_name=_sample_
+    local template_name_display=default sample
     local template_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_template
     local kustomize_dir=$PROJECT_KUSTOMIZEPATH/$kustomize_name
     if [[ -r $kustomize_dir ]]; then
@@ -122,14 +123,15 @@ function routerKustomizeCreate {
     fi
     if [[ "" != "$kustomize_template" && -r $template_dir ]]; then
         template_name=$kustomize_template
+        template_name_display=$kustomize_template
     else
         template_dir=$PROJECT_PATH/$SHARED_SAMPLE
     fi
-    echo -e "\e[32mCreate\e[0m \e[1m$kustomize_name\e[0m kustomize from \e[1m$template_name\e[0m"
+    echo -e "\e[32mCreate\e[0m \e[1m$kustomize_name\e[0m kustomize from \e[1m$template_name_display\e[0m"
     cp -R $template_dir $kustomize_dir &>/dev/null
     sed -i "s/$template_name/$kustomize_name/g" $(find $kustomize_dir -type f)
     git add $kustomize_dir &>/dev/null
-    git commit -m "[kustomize/$kustomize_name] Create from $template_name" $kustomize_dir &>/dev/null
+    git commit -m "[kustomize/$kustomize_name] Create from $template_name_display" $kustomize_dir &>/dev/null
 }
 
 # router for kustomize test sub-command
