@@ -182,8 +182,9 @@ function routerKustomizeRelease {
         echo -e "\e[35mRelease\e[0m Update \e[1m$kustomize_name\e[0m release number $next_release in $kustomize_name/package.yaml"
         echo "| $next_release   | $next_date | $next_description" >> $kustomize_dir/README.md
         sed -i "s/$current_release/$next_release/" $kustomize_dir/package.yaml
-        git add $kustomize_dir
-        git commit -m "[kustomize/$kustomize_name] release from $current_release to $next_release : $next_description" $kustomize_dir &>/dev/null
+        cp $kustomize_dir/README.md $PROJECT_PATH/docs/packages/${kustomize_name}.md &>/dev/null
+        git add $kustomize_dir $PROJECT_PATH/docs/packages/${kustomize_name}.md
+        git commit -m "[kustomize/$kustomize_name] release from $current_release to $next_release : $next_description" $kustomize_dir $PROJECT_PATH/docs/packages/${kustomize_name}.md &>/dev/null
     else
         echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$kustomize_name\e[0m kustomize in $kustomize_dir"
         routerList
