@@ -37,3 +37,4 @@ Simple deployement of nginx 1.7.9 with 2 replica and kustomize file using config
 | 0.0.1   | 20-10-04   | Initial commit
 | 0.0.2   | 2020-10-08 | Add heavy,single and dev overlays
 | 0.0.3   | 2020-10-08 | Improve various configurations provided in heavy, single, dev, default overlays and base profile
+| 0.0.4   | 2020-10-08 | Test for doc creation of this package
