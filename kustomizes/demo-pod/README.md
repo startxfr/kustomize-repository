@@ -61,6 +61,7 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-pod/overlay
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------
-| 0.0.1   | 20-10-04   | Initial commit
+| 0.0.1   | 2020-10-04 | Initial commit
 | 0.0.2   | 2020-10-10 | Add fedora,centos,ubi and alpine overlays
 | 0.0.3   | 2020-10-10 | Improve documentation
+| 0.0.4   | 2020-10-10 | Update doc releases
