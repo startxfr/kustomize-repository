@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-pod
+spec:
+  containers:
+    - name: webserver
+      env:
+        - name: SX_DEBUG
+          value: "true"
