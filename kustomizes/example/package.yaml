@@ -5,4 +5,4 @@ name: example
 # Description of this Kustomize package
 description: Complete example of a kustomize file with image update, configmap generator, merge and json6902 patches.
 # Version of this kustomize package (see https://startxfr.github.io/kustomize-repository/releases for guidelines)
-version: 0.0.5
+version: 0.0.6

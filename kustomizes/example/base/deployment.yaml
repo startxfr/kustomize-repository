@@ -23,14 +23,54 @@ spec:
         - name: webserver
           image: "nginx:1.7.9"
           env:
-            - name: SERVICE_INJECTED
-              value: $(MY_SERVICE_NAME)
             - name: SX_DEBUG
               value: "true"
+            - name: SX_VERBOSE
+              value: "true"
+            - name: SERVICE_INJECTED
+              value: $(MY_SERVICE_NAME)
           envFrom:
             - configMapRef:
                 name: example-config
+          command:
+            - "/bin/sx"
+          args:
+            - "run"
           ports:
           - containerPort: 8080
             name: http
             protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/sx"
+                - isLive
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/sx"
+                - isReady
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 200m
+              memory: 64Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          terminationMessagePath: "/dev/termination-log"
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+
