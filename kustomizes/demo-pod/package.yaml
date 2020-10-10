@@ -5,4 +5,4 @@ name: demo-pod
 # Description of this Kustomize package
 description: A demo pod with a simple OS container
 # Version of this kustomize package (see https://startxfr.github.io/kustomize-repository/releases for guidelines)
-version: 0.0.2
+version: 0.0.3

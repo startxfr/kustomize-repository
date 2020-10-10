@@ -21,7 +21,7 @@ kustomize build github.com/startxfr/kustomize-repository/kustomizes/demo-pod
 
 ## Base profile
 
-Simple deployement of linux image (based on `quay.io/startx/fedora:latest` image) running as a deamon container.
+Simple pod based on linux image (based on `quay.io/startx/fedora:latest` image) running as a deamon container.
 
 ## Overlays profiles
 
@@ -63,3 +63,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-pod/overlay
 | ------- | ---------- | -----------------------
 | 0.0.1   | 20-10-04   | Initial commit
 | 0.0.2   | 2020-10-10 | Add fedora,centos,ubi and alpine overlays
+| 0.0.3   | 2020-10-10 | Improve documentation
