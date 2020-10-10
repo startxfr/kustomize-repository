@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-sxapi
+  annotations:
+    openshift.io/generated-by: sx-kustomize-cli
+  labels:
+    app: "demo-sxapi"
+    version: "0.0.1"
+    app.startx.fr/scope: "base"
+    app.startx.fr/cluster: "mycluster"
+    app.startx.fr/env: "dev"
+    app.startx.fr/component: "demo-sxapi"
+    app.kubernetes.io/component: "demo-sxapi"
+    app.kubernetes.io/name: "demo-sxapi-deployment"
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/part-of: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-sxapi
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: "demo-sxapi"
+        version: "0.0.1"
+        app.startx.fr/scope: "base"
+        app.startx.fr/cluster: "mycluster"
+        app.startx.fr/env: "dev"
+        app.startx.fr/component: "demo-sxapi"
+        app.kubernetes.io/component: "demo-sxapi"
+        app.kubernetes.io/name: "demo-sxapi-deployment"
+        app.kubernetes.io/version: "0.0.1"
+        app.kubernetes.io/part-of: demo
+    spec:      
+      containers:
+        - name: linux
+          image: "quay.io/startx/apache:latest"
+          env:
+            - name: SX_DEBUG
+              value: "true"
+            - name: SX_VERBOSE
+              value: "true"
+          command:
+            - "/bin/sx"
+          args:
+            - "run"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/sx"
+                - isLive
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/sx"
+                - isReady
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 200m
+              memory: 64Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          terminationMessagePath: "/dev/termination-log"
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
