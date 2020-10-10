@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-sxapi
+  namespace: "demo-sxapi"
   annotations:
     openshift.io/generated-by: sx-kustomize-cli
   labels:
@@ -19,7 +20,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demo-sxapi
+      app: "demo-sxapi"
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -49,19 +50,19 @@ spec:
               value: "true"
           envFrom:
             - configMapRef:
-                name: demo-sxapi-config
+                name: "demo-sxapi-config"
           command:
-            - "/bin/sx"
+            - "/bin/sx-nodejs"
           args:
             - "run"
           ports:
-          - containerPort: 8077
-            name: http
+          - name: sxapi
+            containerPort: 8077
             protocol: TCP
           livenessProbe:
             exec:
               command:
-                - "/bin/sx"
+                - "/bin/sx-nodejs"
                 - isLive
             initialDelaySeconds: 1
             timeoutSeconds: 1
@@ -71,7 +72,7 @@ spec:
           readinessProbe:
             exec:
               command:
-                - "/bin/sx"
+                - "/bin/sx-nodejs"
                 - isReady
             initialDelaySeconds: 1
             timeoutSeconds: 1
@@ -80,22 +81,17 @@ spec:
             failureThreshold: 3
           resources:
             limits:
-              cpu: 200m
+              cpu: 100m
               memory: 64Mi
             requests:
-              cpu: 20m
+              cpu: 50m
               memory: 32Mi
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            # - name: "sxapi-log"
-            #   mountPath: "/var/log/httpd"
             - name: sxapi-conf
               mountPath: "/conf"
       volumes:
-        # - name: "sxapi-log"
-        #   emptyDir:
-        #     medium: ""
         - name: sxapi-conf
           configMap:
             name: "demo-sxapi-config"

@@ -22,6 +22,7 @@ kustomize build github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi
 ## Base profile
 
 Simple deployment of an web-exposed API based on sxapi framework (based on `startx/sxapi:latest` image).
+You also have a kustomize for project creation under `ns/` directory (see examples).
 
 ## Overlays profiles
 
@@ -36,6 +37,8 @@ Simple deployment of an web-exposed API based on sxapi framework (based on `star
 ## Overlays examples
 
 ```bash
+# Create the namespace for testing this collection of kustomize overlays
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/ns
 # base configuration running startx/sxapi:latest
 oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/base
 # default configuration (iso base config)
@@ -61,3 +64,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overl
 | 0.0.1   | 2020-10-10 | Initial commit
 | 0.0.2   | 2020-10-10 | Remove patch and clean deployment
 | 0.0.3   | 2020-10-10 | Add various sxapi flavour examples
+| 0.0.4   | 2020-10-10 | Add support for ns and stable releases

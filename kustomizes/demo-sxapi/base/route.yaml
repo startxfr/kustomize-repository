@@ -1,9 +1,13 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: demo-sxapi
+  name: "demo-sxapi"
+  namespace: "demo-sxapi"
   annotations:
     openshift.io/generated-by: sx-kustomize-cli
+    haproxy.router.openshift.io/balance: roundrobin
+    haproxy.router.openshift.io/disable_cookies: "true"
+    template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
     app: "demo-sxapi"
     version: "0.0.1"
@@ -12,7 +16,7 @@ metadata:
     app.startx.fr/env: "dev"
     app.startx.fr/component: "demo-sxapi"
     app.kubernetes.io/component: "demo-sxapi"
-    app.kubernetes.io/name: "demo-sxapi-deployment"
+    app.kubernetes.io/name: "demo-sxapi-route"
     app.kubernetes.io/version: "0.0.1"
     app.kubernetes.io/part-of: demo
 spec:
@@ -21,6 +25,6 @@ spec:
     termination: edge
   to:
     kind: Service
-    name: demo-sxapi
+    name: "demo-sxapi"
     weight: 100
   wildcardPolicy: None

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "demo-sxapi-config-0.3.53"
+  name: "demo-sxapi-config"
   annotations:
     openshift.io/generated-by: sx-kustomize-cli
   labels:
