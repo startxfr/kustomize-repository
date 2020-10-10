@@ -19,9 +19,48 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment
 kustomize build github.com/startxfr/kustomize-repository/kustomizes/demo-deployment
 ```
 
+## Base profile
+
+Simple deployment of an Apache webserver (based on `quay.io/startx/apache:latest` image) running as a deamon container.
+
+## Overlays profiles
+
+- **default** : base configuration.
+- **alpine** : base configuration, but running with `quay.io/startx/apache:alpine3` image
+- **centos7** : base configuration, but running with `quay.io/startx/apache:centos7` image
+- **centos8** : base configuration, but running with `quay.io/startx/apache:centos8` image
+- **fc30** : base configuration, but running with `quay.io/startx/apache:fc30` image
+- **fc31** : base configuration, but running with `quay.io/startx/apache:fc31` image
+- **fc32** : base configuration, but running with `quay.io/startx/apache:fc32` image
+- **ubi** : base configuration, but running with `quay.io/startx/apache:ubi8` image
+
+## Overlays examples
+
+```bash
+# base configuration running quay.io/startx/apache:latest
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/base
+# default configuration (iso base config)
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/default
+# base configuration running with alpine 3 image flavour
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/alpine
+# base configuration running with centos 7 image flavour
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/centos7
+# base configuration running with centos 8 image flavour
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/centos8
+# base configuration running with Fedora 30 image flavour
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/fc30
+# base configuration running with Fedora 31 image flavour
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/fc31
+# base configuration running with Fedora 32 image flavour
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/fc32
+# base configuration running with UBI 8 image flavour
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/overlays/ubi
+```
+
 ## History
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------
 | 0.0.1   | 20-10-04   | Initial commit
 | 0.0.2   | 2020-10-10 | Move to suffix based naming
+| 0.0.3   | 2020-10-10 | Add fedora,centos,ubi and alpine overlays
