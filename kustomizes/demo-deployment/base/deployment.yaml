@@ -51,7 +51,7 @@ spec:
             - configMapRef:
                 name: demo-deployment-config
           command:
-            - "/bin/sx"
+            - "/bin/sx-apache"
           args:
             - "run"
           ports:
@@ -61,7 +61,7 @@ spec:
           livenessProbe:
             exec:
               command:
-                - "/bin/sx"
+                - "/bin/sx-apache"
                 - isLive
             initialDelaySeconds: 1
             timeoutSeconds: 1
@@ -71,7 +71,7 @@ spec:
           readinessProbe:
             exec:
               command:
-                - "/bin/sx"
+                - "/bin/sx-apache"
                 - isReady
             initialDelaySeconds: 1
             timeoutSeconds: 1
