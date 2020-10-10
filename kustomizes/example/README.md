@@ -53,3 +53,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example/overlays
 | 0.0.2   | 2020-10-08 | Add heavy,single and dev overlays
 | 0.0.3   | 2020-10-08 | Improve various configurations provided in heavy, single, dev, default overlays and base profile
 | 0.0.4   | 2020-10-08 | Test for doc creation of this package
+| 0.0.5   | 2020-10-10 | Move to suffix based naming
