@@ -3,8 +3,10 @@ kind: Kustomization
 
 # Default resources for this package
 resources:
+- cm-config.yaml
 - deployment.yaml
 - service.yaml
+- route.yaml
 
 # Example of vars
 vars:
@@ -15,30 +17,3 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: metadata.name
-
-
-# Common to all configmaps and secrets.
-generatorOptions:
-  labels:
-    app: "demo-sxapi"
-    version: "0.0.1"
-    app.startx.fr/scope: "base"
-    app.startx.fr/cluster: "mycluster"
-    app.startx.fr/env: "dev"
-    app.startx.fr/component: "demo-sxapi"
-    app.kubernetes.io/component: "demo-sxapi"
-    app.kubernetes.io/name: "demo-sxapi-deployment"
-    app.kubernetes.io/version: "0.0.1"
-    app.kubernetes.io/part-of: demo
-  annotations:
-    openshift.io/generated-by: sx-kustomize-cli
-
-
-# Example of a configMap generator
-configMapGenerator:
-- name: demo-sxapi-config
-  literals:
-  - MY_CONFIG1="demo-sxapi value 1"
-  - MY_CONFIG2="demo-sxapi value 2"
-  options:
-    disableNameSuffixHash: true

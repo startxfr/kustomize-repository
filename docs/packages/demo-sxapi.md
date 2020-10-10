@@ -21,40 +21,37 @@ kustomize build github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi
 
 ## Base profile
 
-Simple deployment of an Apache webserver (based on `quay.io/startx/apache:latest` image) running as a deamon container.
+Simple deployment of an web-exposed API based on sxapi framework (based on `startx/sxapi:latest` image).
 
 ## Overlays profiles
 
 - **default** : base configuration.
-- **alpine** : base configuration, but running with `quay.io/startx/apache:alpine3` image
-- **centos7** : base configuration, but running with `quay.io/startx/apache:centos7` image
-- **centos8** : base configuration, but running with `quay.io/startx/apache:centos8` image
-- **fc30** : base configuration, but running with `quay.io/startx/apache:fc30` image
-- **fc31** : base configuration, but running with `quay.io/startx/apache:fc31` image
-- **fc32** : base configuration, but running with `quay.io/startx/apache:fc32` image
-- **ubi** : base configuration, but running with `quay.io/startx/apache:ubi8` image
+- **testing** : base on default overlays, but running with `startx/sxapi:testing` image
+- **0.3** : alias to 0.3.53 overlays
+- **0.3.52** : base configuration, but running with `startx/sxapi:0.3.52` image
+- **0.3.53** : base configuration, but running with `startx/sxapi:0.3.53` image
+- **0.2** : alias to 0.2.99 overlays
+- **0.2.99** : base configuration, but running with `startx/sxapi:0.2.99` image
 
 ## Overlays examples
 
 ```bash
-# base configuration running quay.io/startx/apache:latest
+# base configuration running startx/sxapi:latest
 oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/base
 # default configuration (iso base config)
 oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/default
 # base configuration running with alpine 3 image flavour
-oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/alpine
-# base configuration running with centos 7 image flavour
-oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/centos7
-# base configuration running with centos 8 image flavour
-oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/centos8
-# base configuration running with Fedora 30 image flavour
-oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/fc30
-# base configuration running with Fedora 31 image flavour
-oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/fc31
-# base configuration running with Fedora 32 image flavour
-oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/fc32
-# base configuration running with UBI 8 image flavour
-oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/ubi
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/testing
+# alias to 0.3.53 overlays
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/0.3
+# base configuration running with sxapi version 0.3.52 image
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/0.3.52
+# base configuration running with sxapi version 0.3.53 image
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/0.3.53
+# alias to 0.2.99 overlays
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/0.2
+# base configuration running with sxapi version 0.2.99 image
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overlays/0.2.99
 ```
 
 ## History
@@ -63,3 +60,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overl
 | ------- | ---------- | -----------------------
 | 0.0.1   | 2020-10-10 | Initial commit
 | 0.0.2   | 2020-10-10 | Remove patch and clean deployment
+| 0.0.3   | 2020-10-10 | Add various sxapi flavour examples

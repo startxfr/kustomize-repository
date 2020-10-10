@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../../base
+nameSuffix: -0.3.52
+
+resources:
+- cm-config.yaml
+
+patchesStrategicMerge:
+- patches/deployment-config-0.3.52.yaml
+- patches/delete-config.yaml
+
+images:
+- name: startx/sxapi
+  newName: startx/sxapi
+  newTag: "0.3.52"

@@ -1,5 +1,5 @@
-apiVersion: v1
-kind: Service
+apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
   name: demo-sxapi
   annotations:
@@ -16,9 +16,11 @@ metadata:
     app.kubernetes.io/version: "0.0.1"
     app.kubernetes.io/part-of: demo
 spec:
-  ports:
-    - name: http
-      port: 8080
-      targetPort: 8077
-  selector:
-    app: demo-sxapi
+  tls:
+    insecureEdgeTerminationPolicy: Allow
+    termination: edge
+  to:
+    kind: Service
+    name: demo-sxapi
+    weight: 100
+  wildcardPolicy: None
