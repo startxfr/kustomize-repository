@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  labels:
+    app: demo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-deployment
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: demo-deployment
+    spec:
+      containers:
+        - name: webserver
+          image: "nginx:1.7.9"
+          env:
+            - name: SERVICE_INJECTED
+              value: $(MY_SERVICE_NAME)
+            - name: SX_DEBUG
+              value: "true"
+          envFrom:
+            - configMapRef:
+                name: demo-deployment-config
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
