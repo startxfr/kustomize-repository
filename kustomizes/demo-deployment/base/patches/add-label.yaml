@@ -1,6 +1,0 @@
-- op: add
-  path: /metadata/labels/patched
-  value: "added"
-- op: replace
-  path: /metadata/labels/manual
-  value: "value from patch"

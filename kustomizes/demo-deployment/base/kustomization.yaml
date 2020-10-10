@@ -20,10 +20,18 @@ vars:
 # Common to all configmaps and secrets.
 generatorOptions:
   labels:
-    common_label: base
+    app: "demo-deployment"
+    version: "0.0.1"
+    app.startx.fr/scope: "base"
+    app.startx.fr/cluster: "mycluster"
+    app.startx.fr/env: "dev"
+    app.startx.fr/component: "demo-deployment"
+    app.kubernetes.io/component: "demo-deployment"
+    app.kubernetes.io/name: "demo-deployment-deployment"
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/part-of: demo
   annotations:
-    common_annotation: base
-
+    openshift.io/generated-by: sx-kustomize-cli
 
 # Example of a configMap generator
 configMapGenerator:
@@ -33,30 +41,3 @@ configMapGenerator:
   - MY_CONFIG2="demo-deployment value 2"
   options:
     disableNameSuffixHash: true
-    labels:
-      configmap_label: base
-    annotations:
-      configmap_annotation: base
-
-# Example of incremental change for the image
-images:
-- name: nginx
-  newName: quay.io/app-sre/nginx
-  newTag: 1.9.0
-- name: quay.io/app-sre/nginx
-  newName: nginx
-  newTag: 1.9.2
-
-# Example of incremental change for the deployment
-patchesStrategicMerge:
-- patches/add-env.yaml
-- patches/scale-up.yaml
-
-
-# Example of incremental change with a patch
-patchesJson6902:
-- target:
-    version: v1
-    kind: Service
-    name: demo-deployment
-  path: patches/add-label.yaml
