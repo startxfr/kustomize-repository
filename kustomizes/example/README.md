@@ -30,6 +30,21 @@ Simple deployement of nginx 1.7.9 with 2 replica and kustomize file using config
 - **heavy** :  base with image update to nginx 1.9.0 and a deployment augmented to 3 replica
 - **dev** : base with image update to nginx 1.9.2 and a deployment reduced to 1 replica
 
+## Overlays examples
+
+```bash
+# base configuration (nginx 1.7.9 with 2 replica)
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example/base
+# default configuration (nginx 1.9.1 and patches on labels)
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example/overlays/default
+# default configuration with nginx 1.9.0 and 1 replica
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example/overlays/single
+# default configuration with nginx 1.9.0 and 3 replica
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example/overlays/heavy
+# default configuration with nginx 1.9.2 and 1 replica
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example/overlays/dev
+```
+
 ## History
 
 | Release | Date       | Description
