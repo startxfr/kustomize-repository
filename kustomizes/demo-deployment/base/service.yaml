@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-deployment
+  annotations:
+    openshift.io/generated-by: sx-kustomize-cli
+  labels:
+    app: "demo-deployment"
+    version: "0.0.1"
+    app.startx.fr/scope: "base"
+    app.startx.fr/cluster: "mycluster"
+    app.startx.fr/env: "dev"
+    app.startx.fr/component: "demo-deployment"
+    app.kubernetes.io/component: "demo-deployment"
+    app.kubernetes.io/name: "demo-deployment-deployment"
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/part-of: demo
+spec:
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: demo-deployment

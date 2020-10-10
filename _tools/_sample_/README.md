@@ -19,8 +19,28 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/_sample_
 kustomize build github.com/startxfr/kustomize-repository/kustomizes/_sample_
 ```
 
+## Base profile
+
+Simple deployement of linux image (based on `quay.io/startx/fedora:latest` image)
+
+## Overlays profiles
+
+- **default** : base configuration.
+- **xxxxx** : base configuration, but with xxxx change
+
+## Overlays examples
+
+```bash
+# base configuration
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/_sample_/base
+# default configuration (iso to base config)
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/_sample_/overlays/default
+# xxxxx configuration with yyyyyy changes
+oc apply -k github.com/startxfr/kustomize-repository/kustomizes/_sample_/overlays/xxxxx
+```
+
 ## History
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------
-| 0.0.1   | 20-10-04   | Initial commit
+| 0.0.1   | 2020-10-10 | Initial commit

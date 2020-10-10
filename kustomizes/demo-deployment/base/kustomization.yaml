@@ -1,0 +1,43 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Default resources for this package
+resources:
+- deployment.yaml
+- service.yaml
+
+# Example of vars
+vars:
+- name: MY_SERVICE_NAME
+  objref:
+    kind: Service
+    name: demo-deployment
+    apiVersion: v1
+  fieldref:
+    fieldpath: metadata.name
+
+
+# Common to all configmaps and secrets.
+generatorOptions:
+  labels:
+    app: "demo-deployment"
+    version: "0.0.1"
+    app.startx.fr/scope: "base"
+    app.startx.fr/cluster: "mycluster"
+    app.startx.fr/env: "dev"
+    app.startx.fr/component: "demo-deployment"
+    app.kubernetes.io/component: "demo-deployment"
+    app.kubernetes.io/name: "demo-deployment-deployment"
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/part-of: demo
+  annotations:
+    openshift.io/generated-by: sx-kustomize-cli
+
+# Example of a configMap generator
+configMapGenerator:
+- name: demo-deployment-config
+  literals:
+  - MY_CONFIG1="demo-deployment value 1"
+  - MY_CONFIG2="demo-deployment value 2"
+  options:
+    disableNameSuffixHash: true

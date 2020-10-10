@@ -1,0 +1,17 @@
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: demo-sxapi
+  annotations:
+    openshift.io/generated-by: sx-kustomize-cli
+  labels:
+    app: "demo-sxapi"
+    version: "0.0.1"
+    app.startx.fr/scope: "base"
+    app.startx.fr/cluster: "mycluster"
+    app.startx.fr/env: "dev"
+    app.startx.fr/component: "demo-sxapi"
+    app.kubernetes.io/component: "demo-sxapi"
+    app.kubernetes.io/name: "demo-sxapi-project"
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/part-of: demo

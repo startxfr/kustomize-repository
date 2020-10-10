@@ -208,8 +208,9 @@ function routerKustomizeDelete {
                 publish_repository=yes
             fi
         fi
+        rm -f $PROJECT_PATH/docs/packages/${kustomize_name}.md &>/dev/null
         rm -rf $kustomize_dir &>/dev/null
-        git add $kustomize_dir &>/dev/null
+        git add $kustomize_dir $PROJECT_PATH/docs/packages/${kustomize_name}.md &>/dev/null
         git commit -m "[kustomize/$kustomize_name] deleted kustomize $kustomize_name" $kustomize_dir &>/dev/null
         if [[ "$publish_repository" == "yes" ]]; then
             routerPublish

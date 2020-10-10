@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "demo-sxapi"
+  namespace: "demo-sxapi"
+  annotations:
+    openshift.io/generated-by: sx-kustomize-cli
+  labels:
+    app: "demo-sxapi"
+    version: "0.0.1"
+    app.startx.fr/scope: "base"
+    app.startx.fr/cluster: "mycluster"
+    app.startx.fr/env: "dev"
+    app.startx.fr/component: "demo-sxapi"
+    app.kubernetes.io/component: "demo-sxapi"
+    app.kubernetes.io/name: "demo-sxapi-service"
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/part-of: demo
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8077
+  selector:
+    app: "demo-sxapi"

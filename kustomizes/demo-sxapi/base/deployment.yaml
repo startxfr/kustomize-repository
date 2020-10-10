@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-sxapi
+  namespace: "demo-sxapi"
+  annotations:
+    openshift.io/generated-by: sx-kustomize-cli
+  labels:
+    app: "demo-sxapi"
+    version: "0.0.1"
+    app.startx.fr/scope: "base"
+    app.startx.fr/cluster: "mycluster"
+    app.startx.fr/env: "dev"
+    app.startx.fr/component: "demo-sxapi"
+    app.kubernetes.io/component: "demo-sxapi"
+    app.kubernetes.io/name: "demo-sxapi-deployment"
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/part-of: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "demo-sxapi"
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: "demo-sxapi"
+        version: "0.0.1"
+        app.startx.fr/scope: "base"
+        app.startx.fr/cluster: "mycluster"
+        app.startx.fr/env: "dev"
+        app.startx.fr/component: "demo-sxapi"
+        app.kubernetes.io/component: "demo-sxapi"
+        app.kubernetes.io/name: "demo-sxapi-deployment"
+        app.kubernetes.io/version: "0.0.1"
+        app.kubernetes.io/part-of: demo
+    spec:      
+      containers:
+        - name: linux
+          image: "startx/sxapi:latest"
+          env:
+            - name: SX_DEBUG
+              value: "true"
+            - name: SX_VERBOSE
+              value: "true"
+          envFrom:
+            - configMapRef:
+                name: "demo-sxapi-config"
+          command:
+            - "/bin/sx-nodejs"
+          args:
+            - "run"
+          ports:
+          - name: sxapi
+            containerPort: 8077
+            protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/sx-nodejs"
+                - isLive
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/sx-nodejs"
+                - isReady
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi
+          terminationMessagePath: "/dev/termination-log"
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: sxapi-conf
+              mountPath: "/conf"
+      volumes:
+        - name: sxapi-conf
+          configMap:
+            name: "demo-sxapi-config"
+            items:
+            - key: sxapi.yml
+              path: sxapi.yml
+            - key: mylib.js
+              path: mylib.js
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}

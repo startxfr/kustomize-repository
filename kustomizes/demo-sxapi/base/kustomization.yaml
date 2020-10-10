@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Default resources for this package
+resources:
+- cm-config.yaml
+- deployment.yaml
+- service.yaml
+- route.yaml
+
+# Example of vars
+vars:
+- name: MY_SERVICE_NAME
+  objref:
+    kind: Service
+    name: demo-sxapi
+    apiVersion: v1
+  fieldref:
+    fieldpath: metadata.name
+
