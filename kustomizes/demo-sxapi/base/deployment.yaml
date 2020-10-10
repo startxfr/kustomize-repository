@@ -47,6 +47,9 @@ spec:
               value: "true"
             - name: SX_VERBOSE
               value: "true"
+          envFrom:
+            - configMapRef:
+                name: demo-sxapi-config
           command:
             - "/bin/sx"
           args:

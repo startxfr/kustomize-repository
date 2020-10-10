@@ -3,6 +3,6 @@ kind: KustomizePackage
 # Name of this kustomize package
 name: demo-sxapi
 # Description of this Kustomize package
-description: Description of the demo-sxapi startx kustomize package
+description: Deployment of a simple micro-service application motorized by sxapi framework
 # Version of this kustomize package (see https://startxfr.github.io/kustomize-repository/releases for guidelines)
-version: 0.0.3
+version: 0.0.2
