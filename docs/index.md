@@ -83,5 +83,5 @@ In order to get the full developement environment, you must follow the [install 
 
 ## History and releases
 
-Latest release of this repository is v0.0.1 released at 2020-10-13 10:00:00. Read history [traceback](history) for more information
+Latest release of this repository is v0.0.11 released at 2020-11-21 10:00:00. Read history [traceback](history) for more information
 on change and released version. Complementary information could be found in the [release convention](releases)

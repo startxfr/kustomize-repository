@@ -21,14 +21,14 @@ vars:
 generatorOptions:
   labels:
     app: "demo-deployment"
-    version: "0.0.1"
+    version: "0.0.11"
     app.startx.fr/scope: "base"
     app.startx.fr/cluster: "mycluster"
     app.startx.fr/env: "dev"
     app.startx.fr/component: "demo-deployment"
     app.kubernetes.io/component: "demo-deployment"
     app.kubernetes.io/name: "demo-deployment-deployment"
-    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/version: "0.0.11"
     app.kubernetes.io/part-of: demo
   annotations:
     openshift.io/generated-by: sx-kustomize-cli

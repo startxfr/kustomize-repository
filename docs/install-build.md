@@ -1,4 +1,3 @@
-
 # Install building environment
 
 In order to get the full developement environment, you must stick to the following procedure
