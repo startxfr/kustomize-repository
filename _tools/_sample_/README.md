@@ -44,3 +44,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/_sample_/overlay
 | Release | Date       | Description
 | ------- | ---------- | -----------------------
 | 0.0.1   | 2020-10-10 | Initial commit
+| 0.0.11  | 20-11-21   | Move to readthedocs documentation backend 

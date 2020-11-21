@@ -66,3 +66,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/
 | 0.0.3   | 2020-10-10 | Add fedora,centos,ubi and alpine overlays
 | 0.0.4   | 2020-10-10 | Remove patch and add label for generator
 | 0.0.5   | 2020-10-10 | Improve started command
+| 0.0.11  | 2020-11-21 | Move to readthedocs documentation backend
