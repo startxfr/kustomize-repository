@@ -1,16 +1,20 @@
-# STARTX kustomize repository [![startx kustomize repository](https://img.shields.io/badge/latest-v0.1.11-blue.svg)](https://github.com/startxfr/kustomize-repository)
+# STARTX kustomize repository
+
+[![startx kustomize repository](https://img.shields.io/badge/latest-v0.1.11-blue.svg)](https://github.com/startxfr/kustomize-repository)
+
+Repository of kustomize ressources for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
+For more informations and access to the kustomize index, you can visit the [startx kustomize-repository homepage](https://startxfr.github.io/kustomize-repository).
 
 ## Kustomize repository content
 
 This repository host various kustomize targeting the Openshift Container Platform environment. Hereby is a list of kustomize packages availables in this repository, and sample to deploy it under your current openshift cluster (must be logged with appropriate rights).
 
-
-| Kustomize                          | Source                                                                            | Description  
-| ---------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------
-| **[example](packages/example.md)**   | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/example)  | deploy a simple nginx pod exposed via a service
-| **[example](packages/demo-pod.md)**   | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-pod)  | deploy a static pod
-| **[example](packages/demo-deployment.md)**   | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-deployment)  | deploy a pod supervised by a deployment
-| **[example](packages/demo-sxapi.md)**   | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-sxapi)  | deploy a small api motorized by sxapi and supervised by a deployment
+| Kustomize                                  | Source                                                                                            | Description  
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------- | -------------------------------------
+| **[example](packages/example.md)**         | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/example)         | deploy a simple nginx pod exposed via a service
+| **[example](packages/demo-pod.md)**        | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-pod)        | deploy a static pod
+| **[example](packages/demo-deployment.md)** | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-deployment) | deploy a pod supervised by a deployment
+| **[example](packages/demo-sxapi.md)**      | [source](https://github.com/startxfr/kustomize-repository/tree/master/kustomizes/demo-sxapi)      | deploy a small api motorized by sxapi and supervised by a deployment
 
 ## Examples
 
