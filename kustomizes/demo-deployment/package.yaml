@@ -5,4 +5,4 @@ name: demo-deployment
 # Description of this Kustomize package
 description: Deployement of an apache webserver with many flavours
 # Version of this kustomize package (see https://startxfr.github.io/kustomize-repository/releases for guidelines)
-version: 0.0.111
+version: 0.1.17
