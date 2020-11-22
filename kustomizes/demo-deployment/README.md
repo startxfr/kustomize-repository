@@ -67,3 +67,5 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-deployment/
 | 0.0.4   | 2020-10-10 | Remove patch and add label for generator
 | 0.0.5   | 2020-10-10 | Improve started command
 | 0.0.11  | 2020-11-21 | Move to readthedocs documentation backend
+| 0.1.17   | 2020-11-23 | Move documentation to kustomize-repository.readthedocs.io
+| 0.1.19   | 2020-11-23 | Testing global release of all packages
