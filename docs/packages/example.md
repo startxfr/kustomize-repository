@@ -56,3 +56,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/example/overlays
 | 0.0.5   | 2020-10-10 | Move to suffix based naming
 | 0.0.6   | 2020-10-10 | Update labels and secret linking
 | 0.1.17   | 2020-11-23 | Move documentation to kustomize-repository.readthedocs.io
+| 0.1.19   | 2020-11-23 | Testing global release of all packages
