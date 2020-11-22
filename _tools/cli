@@ -3,7 +3,8 @@
 SXV4_CONSOLE_VERSION=3.9.109
 SHARED_NAME=_sample_
 SHARED_SAMPLE=_tools/$SHARED_NAME
-BRANCH_NAME=devel
+WORK_BRANCH=devel
+MASTER_BRANCH=master
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=kustomize-repository
 
@@ -67,40 +68,25 @@ function routerList {
 # router for publish command
 function routerPublish {
     local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-    local branch_current="master"
-    local branch_target="master"
-    if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
-        branch_current="$BRANCH_NAME"
-    fi
     echo -e "\e[36mPublish\e[0m commit all change to $GITHUB_REPOSITORY respository"
     git add $PROJECT_PATH &>/dev/null
     git commit -m "[docs] update repository content" $PROJECT_PATH &>/dev/null
-    git push origin $branch_current
-    if [[ "$branch_current" != "$branch_target" ]]; then
-        echo -e "\e[36mPublish\e[0m merge \e[1m$branch_current\e[0m into \e[1m$branch_target\e[0m"
-        git checkout $branch_target &>/dev/null
-        git merge --commit $branch_current
-        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m and \e[1m$branch_target\e[0m"
-        git push origin $branch_target $branch_current
-        git checkout $branch_current
-    else 
-        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m"
-        git push origin $branch_target
-    fi
+    git push origin $WORK_BRANCH
+    echo -e "\e[36mPublish\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
+    git checkout $MASTER_BRANCH &>/dev/null
+    git merge --commit $WORK_BRANCH
+    echo -e "\e[36mPublish\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
+    git push origin $MASTER_BRANCH $WORK_BRANCH
+    git checkout $WORK_BRANCH
 }
 
 # router for release command
 function routerRelease {
     local auto_feature=$1
     local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-    local branch_current="master"
-    local branch_origin="master"
     local next_description="publish stable update for the full repository"
     local current_release="$(cat $PROJECT_PATH/_tools/repo-release)"
     local next_release=$(cat $PROJECT_PATH/_tools/repo-release | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
-    if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
-        branch_current="$BRANCH_NAME"
-    fi
     if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
         echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m auto-version to $next_release"
     else
@@ -119,24 +105,21 @@ function routerRelease {
     for pkg in $(kustomizeList); do
         routerKustomizeRelease $pkg $next_release "$next_description"
     done
+    git checkout $WORK_BRANCH &>/dev/null
     echo -e "\e[36mRelease\e[0m commit all change to $GITHUB_REPOSITORY respository"
     echo $next_release > $PROJECT_PATH/_tools/repo-release
     sed -i "s/latest-$current_release/latest-$next_release/" $PROJECT_PATH/README.md
     sed -i "s/latest-$current_release/latest-$next_release/" $PROJECT_PATH/docs/index.md
     git add $PROJECT_PATH &>/dev/null
     git commit -m "[docs] update repository content to $next_release" $PROJECT_PATH &>/dev/null
-    git checkout $branch_origin &>/dev/null
-    git add $PROJECT_PATH &>/dev/null
-    git commit -m "[docs] update repository content" $PROJECT_PATH &>/dev/null
-    echo -e "\e[36mRelease\e[0m Jump into \e[1m$current_release\e[0m"
-    git checkout $current_release &>/dev/null
-    echo -e "\e[36mRelease\e[0m Merge \e[1m$branch_origin\e[0m update to \e[1m$current_release\e[0m"
-    git merge --commit $branch_origin &>/dev/null
+    git checkout $MASTER_BRANCH &>/dev/null
+    echo -e "\e[36mRelease\e[0m Merging into \e[1m$MASTER_BRANCH\e[0m update to \e[1m$current_release\e[0m"
+    git merge --commit $WORK_BRANCH &>/dev/null
     echo -e "\e[36mRelease\e[0m Create \e[1m$next_release\e[0m tag"
     git tag $next_release -m "[release/$next_release] $next_description"
     echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
-    git push origin $next_release $branch_origin
-    git checkout $branch_current
+    git push origin $next_release $MASTER_BRANCH $WORK_BRANCH
+    git checkout $WORK_BRANCH &>/dev/null
 }
 
 # router for version sub-command
