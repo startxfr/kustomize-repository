@@ -65,4 +65,4 @@ oc apply -k github.com/startxfr/kustomize-repository/kustomizes/demo-sxapi/overl
 | 0.0.2   | 2020-10-10 | Remove patch and clean deployment
 | 0.0.3   | 2020-10-10 | Add various sxapi flavour examples
 | 0.0.4   | 2020-10-10 | Add support for ns and stable releases
-| 0.0.11  | 2020-11-21 | Move to readthedocs documentation backend
+| 0.1.17   | 2020-11-23 | Move documentation to kustomize-repository.readthedocs.io
