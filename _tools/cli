@@ -243,7 +243,7 @@ function routerKustomizeRelease {
             fi
         fi
         echo -e "\e[35mRelease\e[0m Update \e[1m$kustomize_name\e[0m release number $next_release in $kustomize_name/package.yaml"
-        echo "| $next_release   | $next_date | $next_description" >> $kustomize_dir/README.md
+        echo "| $next_release  | $next_date | $next_description" >> $kustomize_dir/README.md
         sed -i "s/$current_release/$next_release/" $kustomize_dir/package.yaml
         cp $kustomize_dir/README.md $PROJECT_PATH/docs/packages/${kustomize_name}.md &>/dev/null
         git add $kustomize_dir $PROJECT_PATH/docs/packages/${kustomize_name}.md
