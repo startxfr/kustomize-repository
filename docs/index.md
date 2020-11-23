@@ -1,6 +1,6 @@
 # STARTX kustomize repository
 
-[![startx kustomize repository](https://img.shields.io/badge/latest-v0.1.19-blue.svg)](https://github.com/startxfr/kustomize-repository)
+[![startx kustomize repository](https://img.shields.io/badge/latest-v0.1.20-blue.svg)](https://github.com/startxfr/kustomize-repository)
 
 Repository of kustomize ressources for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 For more informations and access to the kustomize index, you can visit the [startx kustomize-repository homepage](https://startxfr.github.io/kustomize-repository).
