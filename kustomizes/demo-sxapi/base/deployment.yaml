@@ -81,11 +81,11 @@ spec:
             failureThreshold: 3
           resources:
             limits:
-              cpu: 100m
-              memory: 64Mi
+              cpu: "100m"
+              memory: "64Mi"
             requests:
-              cpu: 50m
-              memory: 32Mi
+              cpu: "50m"
+              memory: "32Mi"
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
